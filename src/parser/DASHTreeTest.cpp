@@ -16,7 +16,7 @@
  *
  */
 
-#include "DashTree.h"
+#include "DASHTree.h"
 #include "../log.h"
 
 void Log(const LogLevel loglevel, const char* format, ...)
