@@ -98,6 +98,7 @@ build_addon(inputstream.adaptive ADP DEPLIBS)
 include(CPack)
 
 #Tests
+find_package( Threads )
 add_executable(Test_DashTree
   src/parser/DASHTreeTest.cpp
   src/parser/DASHTree.cpp
@@ -106,7 +107,7 @@ add_executable(Test_DashTree
   src/helpers.cpp
   src/oscompat.cpp
   )
-target_link_libraries(Test_DashTree ${EXPAT_LIBRARIES})
+target_link_libraries(Test_DashTree ${EXPAT_LIBRARIES} Threads::Threads)
 
 
 enable_testing()
