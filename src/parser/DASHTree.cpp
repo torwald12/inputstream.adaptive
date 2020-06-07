@@ -108,6 +108,8 @@ static unsigned int ParseSegmentTemplate(const char** attr,
       tpl.duration = atoi((const char*)*(attr + 1));
     else if (strcmp((const char*)*attr, "media") == 0)
       tpl.media = (const char*)*(attr + 1);
+    else if (strcmp((const char*)*attr, "presentationTimeOffset") == 0)
+      tpl.presentationTimeOffset = atoll((const char*)*(attr + 1));
     else if (strcmp((const char*)*attr, "startNumber") == 0)
       startNumber = atoi((const char*)*(attr + 1));
     else if (strcmp((const char*)*attr, "initialization") == 0)
@@ -1030,6 +1032,8 @@ static void XMLCALL start(void* data, const char* el, const char** attr)
       }
       else if (strcmp((const char*)*attr, "publishTime") == 0)
         dash->publish_time_ = getTime((const char*)*(attr + 1));
+      else if (strcmp((const char*)*attr, "testTime") == 0)
+        dash->stream_start_ = getTime((const char*)*(attr + 1));
       else if (strcmp((const char*)*attr, "minimumUpdatePeriod") == 0)
       {
         uint64_t dur(0);
@@ -1537,7 +1541,6 @@ static void XMLCALL end(void* data, const char* el)
 /*----------------------------------------------------------------------
 |   DASHTree
 +---------------------------------------------------------------------*/
-
 bool DASHTree::open(const std::string& url, const std::string& manifestUpdateParam)
 {
   PreparePaths(url, manifestUpdateParam);

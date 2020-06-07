@@ -96,3 +96,19 @@ list(APPEND DEPLIBS webm_parser)
 build_addon(inputstream.adaptive ADP DEPLIBS)
 
 include(CPack)
+
+#Tests
+add_executable(Test_DashTree
+  src/parser/DASHTreeTest.cpp
+  src/parser/DASHTree.cpp
+  src/parser/PRProtectionParser.cpp
+  src/common/AdaptiveTree.cpp
+  src/helpers.cpp
+  )
+target_link_libraries(Test_DashTree ${EXPAT_LIBRARIES})
+
+
+enable_testing()
+
+add_test(6play_live Test_DashTree)
+#set_tests_properties(6play_live PROPERTIES WILL_FAIL FALSE)

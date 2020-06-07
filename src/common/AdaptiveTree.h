@@ -140,10 +140,11 @@ public:
 
   struct SegmentTemplate
   {
-    SegmentTemplate() : timescale(0), duration(0) {};
+    SegmentTemplate() : timescale(0), duration(0), presentationTimeOffset(0){};
     std::string initialization;
     std::string media;
     unsigned int timescale, duration;
+    uint64_t presentationTimeOffset;
   };
 
   struct Representation
