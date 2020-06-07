@@ -104,6 +104,7 @@ add_executable(Test_DashTree
   src/parser/PRProtectionParser.cpp
   src/common/AdaptiveTree.cpp
   src/helpers.cpp
+  src/oscompat.cpp
   )
 target_link_libraries(Test_DashTree ${EXPAT_LIBRARIES})
 
