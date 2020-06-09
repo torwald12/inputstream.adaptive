@@ -29,7 +29,6 @@
 #include <thread>
 #include <time.h>
 
-
 using namespace adaptive;
 
 enum
@@ -1025,11 +1024,7 @@ static void XMLCALL start(void* data, const char* el, const char** attr)
         dash->has_timeshift_buffer_ = true;
       }
       else if (strcmp((const char*)*attr, "availabilityStartTime") == 0)
-      {
         dash->available_time_ = getTime((const char*)*(attr + 1));
-        if (!dash->available_time_)
-          dash->available_time_ = ~0ULL;
-      }
       else if (strcmp((const char*)*attr, "publishTime") == 0)
         dash->publish_time_ = getTime((const char*)*(attr + 1));
       else if (strcmp((const char*)*attr, "testTime") == 0)
@@ -1042,9 +1037,6 @@ static void XMLCALL start(void* data, const char* el, const char** attr)
       }
       attr += 2;
     }
-
-    if (!~dash->available_time_)
-      dash->available_time_ = dash->publish_time_;
 
     if (!mpt)
       mpt = tsbd;
@@ -1243,20 +1235,25 @@ static void XMLCALL end(void* data, const char* el)
                     seg.startPTS_ = 0;
                   seg.range_begin_ = dash->current_adaptationset_->startPTS_;
 
-                  if (!timeBased && dash->has_timeshift_buffer_ && dash->available_time_)
+                  if (!timeBased && dash->has_timeshift_buffer_ &&
+                      tpl.duration)
                   {
-                    if (!tpl.duration)
-                      tpl.duration = static_cast<unsigned int>(
-                          (overallSeconds * tpl.timescale) /
-                          dash->current_adaptationset_->segment_durations_.data.size());
+                    // get the closest time to calculate start_number
+                    uint64_t calcTime =
+                        dash->publish_time_ ? dash->publish_time_ : dash->stream_start_;
+
                     seg.range_end_ +=
-                        (static_cast<int64_t>(dash->stream_start_ - dash->available_time_ -
-                                              overallSeconds) *
-                         tpl.timescale) /
-                        tpl.duration;
-                    seg.range_end_ -=
-                        (dash->current_period_->start_ * tpl.timescale) / (1000 * tpl.duration);
+                        (static_cast<int64_t>(
+                             calcTime - dash->available_time_ - overallSeconds -
+                             static_cast<uint64_t>(dash->current_period_->start_ / 1000)) *
+                             tpl.timescale +
+                         tpl.presentationTimeOffset) /
+                        tpl.duration + 1;
                   }
+                  else if (!tpl.duration)
+                    tpl.duration = static_cast<unsigned int>(
+                        (overallSeconds * tpl.timescale) /
+                        dash->current_adaptationset_->segment_durations_.data.size());
 
                   for (; countSegs; --countSegs)
                   {

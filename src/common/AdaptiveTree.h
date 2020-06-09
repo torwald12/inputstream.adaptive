@@ -131,11 +131,11 @@ public:
   struct Segment
   {
     void SetRange(const char *range);
-    uint64_t range_begin_; //Either byterange start or timestamp or ~0
-    uint64_t range_end_; //Either byterange end or sequence_id if range_begin is ~0
-    const char *url;
-    uint64_t startPTS_;
-    uint16_t pssh_set_;
+    uint64_t range_begin_ = 0; //Either byterange start or timestamp or ~0
+    uint64_t range_end_ = 0; //Either byterange end or sequence_id if range_begin is ~0
+    const char *url = nullptr;
+    uint64_t startPTS_ = 0;
+    uint16_t pssh_set_ = 0;
   };
 
   struct SegmentTemplate
