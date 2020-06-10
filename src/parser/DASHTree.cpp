@@ -1239,16 +1239,15 @@ static void XMLCALL end(void* data, const char* el)
                       tpl.duration)
                   {
                     // get the closest time to calculate start_number
-                    uint64_t calcTime =
+                    uint64_t calc_time =
                         dash->publish_time_ ? dash->publish_time_ : dash->stream_start_;
-
-                    seg.range_end_ +=
-                        (static_cast<int64_t>(
-                             calcTime - dash->available_time_ - overallSeconds -
-                             static_cast<uint64_t>(dash->current_period_->start_ / 1000)) *
-                             tpl.timescale +
-                         tpl.presentationTimeOffset) /
-                        tpl.duration + 1;
+                    uint64_t sample_time = tpl.presentationTimeOffset
+                                               ? tpl.presentationTimeOffset / tpl.timescale
+                                               : dash->current_period_->start_ *  1000;
+                    seg.range_end_ += (static_cast<int64_t>(calc_time - dash->available_time_ -
+                                                            overallSeconds - sample_time)) *
+                                          tpl.timescale / tpl.duration +
+                                      1;
                   }
                   else if (!tpl.duration)
                     tpl.duration = static_cast<unsigned int>(
