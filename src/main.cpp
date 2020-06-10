@@ -2254,7 +2254,6 @@ bool Session::InitializeDRM()
 
   cdm_sessions_.resize(adaptiveTree_->current_period_->psshSets_.size());
   memset(&cdm_sessions_.front(), 0, sizeof(CDMSESSION));
-  return true;
   // Try to initialize an SingleSampleDecryptor
   if (adaptiveTree_->current_period_->encryptionState_)
   {

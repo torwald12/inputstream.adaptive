@@ -1243,7 +1243,8 @@ static void XMLCALL end(void* data, const char* el)
                         dash->publish_time_ ? dash->publish_time_ : dash->stream_start_;
                     uint64_t sample_time = tpl.presentationTimeOffset
                                                ? tpl.presentationTimeOffset / tpl.timescale
-                                               : dash->current_period_->start_ *  1000;
+                                               : dash->current_period_->start_ /  1000;
+
                     seg.range_end_ += (static_cast<int64_t>(calc_time - dash->available_time_ -
                                                             overallSeconds - sample_time)) *
                                           tpl.timescale / tpl.duration +
